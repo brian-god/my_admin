@@ -8,6 +8,7 @@
     "react": "^16.7.0",
     "react-app-rewired": "^1.6.2",
     "react-dom": "^16.7.0",
+    "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.2"
   },
   "scripts": {
@@ -24,5 +25,17 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "config-overrides.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codeChengeWord/my_admin.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/codeChengeWord/my_admin/issues"
+  },
+  "homepage": "https://github.com/codeChengeWord/my_admin#readme"
 }
