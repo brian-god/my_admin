@@ -13,6 +13,7 @@ class AddUserFrom extends React.Component {
                 width={700}
             >
                 <WrappedRegistrationForm
+                    onCancel={this.props.onCancel}
                 />
             </Modal>
         );
@@ -24,17 +25,35 @@ class RegistrationForm extends React.Component{
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
+                //没有错误关闭
+                this.props.onCancel()
                 console.log('Received values of form: ', values);
             }
         });
         const fromvalues = this.props.form.getFieldsValue();
+
         //fromvalues.push("sex"=this.state.value)
-        console.log(fromvalues)
+        console.log(JSON.stringify(fromvalues));
+        //发送请求
+        this.add(JSON.stringify(fromvalues))
+    }
+    add(fromvalue) {
+        fetch('http://127.0.0.1:8080/insertUser', {
+            method: 'post',//改成post
+            mode: 'cors',//跨域
+            headers: {//请求头
+                'Content-Type': 'application/json'
+            },
+            body: fromvalue//向服务器发送的数据
+        })
+            .then(res => res.json())
+            .then(json => { console.log(json) })
     }
     state = {
         confirmDirty: false,
         autoCompleteResult: [],
         value: 1,
+        fromvaluse: '',
     };
     onChange = (e) => {
         console.log('radio checked', e.target.value);

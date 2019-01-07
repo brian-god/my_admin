@@ -67,6 +67,9 @@ class UserIndex extends Component{
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({ selectedRowKeys });
     }
+    submeitfrom(usermessage){
+        console.log(usermessage)
+    }
     render(){
         const { selectedRowKeys } = this.state;
         const rowSelection = {
