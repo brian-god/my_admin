@@ -23,7 +23,7 @@ class RouterIndex extends Component {
                     <Route path="/home" component={HomePage} />
                     <Route path="/user" component={UserIndex} />
                     <Route path="/user_team" component={UserTeam} />
-                <Route path="/adduser" component={App} />
+                    <Route path="/adduser" component={App} />
                 </Switch>
         )
     }

@@ -1,80 +1,115 @@
 import React, { Component} from 'react';
-import { Table, Divider, Tag, Button, Icon, Modal } from 'antd';
-import data from './data'
+import { Table, Button, Icon, Modal} from 'antd';
+import columns from './tableColumns'
 import AddUserFrom from './operation/add'
+import fetch from 'isomorphic-fetch';
+//import axios from 'axios'
 //按钮组
 const ButtonGroup = Button.Group;
-//新增用户弹出表单
-const columns = [{
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    render: text => <a href="javascript:;">{text}</a>,
-}, {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-}, {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address',
-}, {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: tags => (
-        <span>
-            {tags.map(tag => <Tag color="blue" key={tag}>{tag}</Tag>)}
-        </span>
-    ),
-}, {
-    title: 'Action',
-    key: 'action',
-    render: (text, record) => (
-        <span>
-            <a href="javascript:;">Invite {record.name}</a>
-            <Divider type="vertical" />
-            <a href="javascript:;">Delete</a>
-        </span>
-    ),
-}];
+//对话框
+const confirm = Modal.confirm;
 class UserIndex extends Component{
     state = { 
         selectedRowKeys: [],
-        visible: false 
+        visible: false ,
+        data: null,
+        ischenge : 0,
+        disabled : true
     }
-
+    /**
+     * 构造函数
+     * @param {} props 
+     */
+    constructor(props) {
+        super(props);
+        //调用请求方法
+        this.loadingdata();
+        //如需使用this则需要先声明一下，能够解决作用域的问题
+        this.bachDelete=this.bachDelete.bind(this);
+    }
+    /**生命周期函数
+   * 当state中的数据更新
+   * 判断是否需要重新渲染
+   */
+    shouldComponentUpdate(nextProps, nextState) {
+        //数据改变重新渲染
+        if ( nextState.data !== this.state.data) {
+            return true
+        }
+        if(this.state.visible!==nextState.visible){
+            return true
+        }
+        if (this.state.disabled !== nextState.disabled) {
+            return true
+        }
+        return false
+    }
     showModal = () => {
         this.setState({
             visible: true,
         });
     }
-
-    handleOk = (e) => {
-        console.log("确定按钮被点击");
-        this.setState({
-            visible: false,
-        });
-    }
-
+    /**
+     * 关闭弹框
+     */
     handleCancel = (e) => {
-        console.log(e);
         this.setState({
             visible: false,
         });
+        this.loadingdata()
     }
+    //行选择触发
     onSelectChange = (selectedRowKeys) => {
-        console.log('selectedRowKeys changed: ', selectedRowKeys);
-        this.setState({ selectedRowKeys });
+        //改变删除按钮的状态
+        if (selectedRowKeys.length>0){
+            this.setState({ 
+                selectedRowKeys:selectedRowKeys,
+                disabled:false
+            });
+        }else{
+            this.setState({
+                disabled: true
+            });
+        }
     }
-    submeitfrom(usermessage){
-        console.log(usermessage)
+    //删除的方法
+    bachDelete(){
+        console.log("删除方法被点击")
+        let seletdata  = this.state.selectedRowKeys
+        if (seletdata.length > 0) {
+            confirm({
+            title: 'Are you sure delete this task?',
+            content: 'Some descriptions',
+            okText: 'Yes',
+            okType: 'danger',
+            cancelText: 'No',
+            onOk() {
+            console.log('OK');
+            },
+            onCancel() {
+            console.log('Cancel');
+            },
+        });
+        }
+    }
+     loadingdata() {
+         fetch('http://127.0.0.1:8080/allUser')
+            .then(response => response.json())
+            .then(result => {
+                // 在此处写获取数据之后的处理逻辑
+                let date = result.data
+                let json = JSON.parse(date);
+                console.log(json);
+                this.setState({
+                    data: json,
+                });
+            }).catch(function (e) {
+                console.log("fetch fail", JSON.stringify(e));
+            });
     }
     render(){
-        const { selectedRowKeys } = this.state;
         const rowSelection = {
-            selectedRowKeys,
-            onChange: this.onSelectChange,
+            onChange: this.onSelectChange
         };
         return(
             <div style={{ padding: 24, background: '#fff', minHeight: 500 }}>
@@ -85,21 +120,23 @@ class UserIndex extends Component{
                                 onClick={this.showModal} >
                                 <Icon type="plus-circle" />新增
                             </Button>
-                            <Button type="primary">
+                            <Button type="primary"
+                                onClick={this.loadingdata}>
                                 <Icon type="edit" />
                                 修改
                             </Button>
-                            <Button type="primary">
+                            <Button type="primary"
+                                onClick={this.bachDelete}
+                                disabled={this.state.disabled}>
                                 <Icon type="delete" />
                                删除
                             </Button>
                         </ButtonGroup>
                     </div>
-                    <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+                    <Table rowKey="id" rowSelection={rowSelection} columns={columns} dataSource={this.state.data}/>
                 </div>
                 <AddUserFrom
                     visible={this.state.visible}
-                    onOk={this.handleOk}
                     onCancel={this.handleCancel}
                 />
             </div>

@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import { Form, Input, Tooltip, Radio , DatePicker, Icon, Cascader, Select, Row, Col, Checkbox, Button, Option, AutoComplete, Modal } from 'antd';
+import React from 'react';
+import fetch from 'isomorphic-fetch';
+import { Form, Input, Radio, DatePicker, message, Checkbox, Button, Modal } from 'antd';
 class AddUserFrom extends React.Component {
     render() {
-       
+
         return (
             <Modal
                 title="新增用户"
                 visible={this.props.visible}
-                onOk={this.props.onOk}
                 onCancel={this.props.onCancel}
-                footer ={null}
+                footer={null}
                 width={700}
             >
                 <WrappedRegistrationForm
@@ -20,14 +20,14 @@ class AddUserFrom extends React.Component {
     }
 }
 const RadioGroup = Radio.Group;
-class RegistrationForm extends React.Component{
+class RegistrationForm extends React.Component {
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
                 //没有错误关闭
-                this.props.onCancel()
-                console.log('Received values of form: ', values);
+                //this.props.onCancel()
+                //console.log('Received values of form: ', values);
             }
         });
         const fromvalues = this.props.form.getFieldsValue();
@@ -40,14 +40,32 @@ class RegistrationForm extends React.Component{
     add(fromvalue) {
         fetch('http://127.0.0.1:8080/insertUser', {
             method: 'post',//改成post
-            mode: 'cors',//跨域
+            mode: 'no-cors',//跨域
             headers: {//请求头
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
             body: fromvalue//向服务器发送的数据
+        }).then(res => {
+            message.success("新增用户成功");
+            this.props.onCancel()
         })
-            .then(res => res.json())
-            .then(json => { console.log(json) })
+        .catch(json => { 
+            message.error("保存用户出错！！");
+            //没有错误关闭
+            this.props.onCancel()
+         })/*.then(response => response.json())
+            .then(result => {
+                message.success("新增用户成功");
+                // 在此处写获取数据之后的处理逻辑
+                let date = result.data
+                let json = JSON.parse(date);
+                console.log(json);
+            }).catch(e =>{
+            message.error("保存用户出错！！");
+            //没有错误关闭
+            this.props.onCancel()
+        });*/
     }
     state = {
         confirmDirty: false,
@@ -81,31 +99,7 @@ class RegistrationForm extends React.Component{
         }
         callback();
     }
-    render(){
-        const { autoCompleteResult } = this.state;
-        const residences = [{
-            value: 'zhejiang',
-            label: 'Zhejiang',
-            children: [{
-                value: 'hangzhou',
-                label: 'Hangzhou',
-                children: [{
-                    value: 'xihu',
-                    label: 'West Lake',
-                }],
-            }],
-        }, {
-            value: 'jiangsu',
-            label: 'Jiangsu',
-            children: [{
-                value: 'nanjing',
-                label: 'Nanjing',
-                children: [{
-                    value: 'zhonghuamen',
-                    label: 'Zhong Hua Men',
-                }],
-            }],
-        }];
+    render() {
         const { getFieldDecorator } = this.props.form;
         //表中头部字体样式
         const formItemLayout = {
@@ -133,7 +127,7 @@ class RegistrationForm extends React.Component{
         const config = {
             rules: [{ type: 'object', required: true, message: 'Please select time!' }],
         }
-        return(
+        return (
             <Form
                 //新增用户的form表单提交表单
                 onSubmit={this.handleSubmit}>
@@ -142,11 +136,11 @@ class RegistrationForm extends React.Component{
                     {...formItemLayout}
                     label="昵称"
                 >
-                    {getFieldDecorator('name', {
+                    {getFieldDecorator('nickname', {
                         rules: [{
-                            type: 'string', message: 'The input is not valid E-mail!',
+                            type: 'string', message: '请输入正确的昵称',
                         }, {
-                            required: true, message: 'Please input your E-mail!',
+                            required: true, message: '昵称不能为空',
                         }],
                     })(
                         <Input />
@@ -157,26 +151,26 @@ class RegistrationForm extends React.Component{
                     {...formItemLayout}
                     label="账号"
                 >
-                    {getFieldDecorator('code', {
+                    {getFieldDecorator('username', {
                         rules: [{
-                            type: 'string', message: 'The input is not valid E-mail!',
+                            type: 'string', message: '请输入正确的账号',
                         }, {
-                            required: true, message: 'Please input your E-mail!',
+                            required: true, message: '账号不能为空',
                         }],
                     })(
                         <Input />
                     )}
                 </Form.Item>
                 <Form.Item
-                //邮箱
+                    //邮箱
                     {...formItemLayout}
-                    label="E-mail"
+                    label="E-email"
                 >
                     {getFieldDecorator('email', {
                         rules: [{
-                            type: 'email', message: 'The input is not valid E-mail!',
+                            type: 'email', message: '请输入正确的E-mail!',
                         }, {
-                            required: true, message: 'Please input your E-mail!',
+                            required: true, message: 'E-mail不能为空!',
                         }],
                     })(
                         <Input />
@@ -190,9 +184,9 @@ class RegistrationForm extends React.Component{
                         rules: [{
                             required: true, message: '密码不能为空！',
                         },
-                            {
-                                validator: this.validateToNextPassword,
-                            }
+                        {
+                            validator: this.validateToNextPassword,
+                        }
                         ],
                     })(
                         <Input type="password" />
@@ -204,7 +198,7 @@ class RegistrationForm extends React.Component{
                 >
                     {getFieldDecorator('confirm', {
                         rules: [{
-                            required: true, message: 'Please confirm your password!',
+                            required: true, message: '请确认你的密码!',
                         }, {
                             validator: this.compareToFirstPassword,
                         }],
@@ -216,16 +210,16 @@ class RegistrationForm extends React.Component{
                     {...formItemLayout}
                     label="生日"
                 >
-                    {getFieldDecorator('date-picker', config)(
+                    {getFieldDecorator('birthday', config)(
                         <DatePicker />
                     )}
-                </Form.Item>   
+                </Form.Item>
                 <Form.Item
                     {...formItemLayout}
                     label="性别"
                 >
                     {
-                        getFieldDecorator('sex', {
+                        getFieldDecorator('gender', {
                             rules: [{
                                 required: true, message: '请选择性别',
                             }]
@@ -238,14 +232,18 @@ class RegistrationForm extends React.Component{
                     }
                 </Form.Item>
                 <Form.Item
+                    //邮箱
                     {...formItemLayout}
-                    label="地址"
+                    label="手机号"
                 >
-                    {getFieldDecorator('residence', {
-                        initialValue: ['zhejiang', 'hangzhou', 'xihu'],
-                        rules: [{ type: 'array', required: true, message: 'Please select your habitual residence!' }],
+                    {getFieldDecorator('mobile', {
+                        rules: [{
+                            type: 'string', message: '请输入正确的手机号！',
+                        }, {
+                            required: true, message: '手机号不能为空！',
+                        }],
                     })(
-                        <Cascader options={residences} />
+                        <Input />
                     )}
                 </Form.Item>
                 <Form.Item {...tailFormItemLayout}>
@@ -258,7 +256,7 @@ class RegistrationForm extends React.Component{
                 <Form.Item {...tailFormItemLayout}>
                     <Button type="primary" htmlType="submit">提交</Button>
                 </Form.Item>
-            </Form>  
+            </Form>
         );
     }
 }
