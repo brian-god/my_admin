@@ -1,5 +1,5 @@
 import React from 'react';
-import fetch from 'isomorphic-fetch';
+import fetch from 'cross-fetch'
 import { Form, Input, Radio, DatePicker, message, Checkbox, Button, Modal } from 'antd';
 class AddUserFrom extends React.Component {
     render() {
@@ -37,7 +37,7 @@ class RegistrationForm extends React.Component {
         //发送请求
         this.add(JSON.stringify(fromvalues))
     }
-    add(fromvalue) {
+     add(fromvalue) {
         fetch('http://127.0.0.1:8080/insertUser', {
             method: 'post',//改成post
             mode: 'no-cors',//跨域

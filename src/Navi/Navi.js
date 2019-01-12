@@ -2,7 +2,7 @@ import { Layout } from 'antd';
 import React, { Component, } from 'react';
 import { HashRouter } from 'react-router-dom'
 import 'antd/dist/antd.css';
-import './Navi.css'
+import './../stetic/css/Navi.css'
 //漏油器
 import RouterIndex from './../router/index'
 //左侧按钮

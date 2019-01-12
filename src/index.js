@@ -77,7 +77,7 @@ ReactDOM.render(<SiderDemo />, document.getElementById("root"));
 */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import SiderDemo from './Navi/Navi'
+import App from './App'
 
 
 /**创建store组件 */
@@ -85,5 +85,7 @@ import SiderDemo from './Navi/Navi'
 //thunk作用是使action创建函数可以返回一个function代替一个action对象
 
 ReactDOM.render(
-      <SiderDemo />, document.getElementById('root'));
+      //<SiderDemo />, document.getElementById('root')
+  <App />, document.getElementById('root')
+      );
 //registerServiceWorker();

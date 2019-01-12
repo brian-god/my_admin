@@ -1,0 +1,80 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+.ant-layout-sider-children .ant-menu-item {
+  color: #1890ff;
+}
+.ant-layout-sider{
+  color: #000;
+}
+
+#components-layout-demo-custom-trigger .trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color .3s;
+}
+
+#components-layout-demo-custom-trigger .trigger:hover {
+  color: #1890ff;
+}
+
+#components-layout-demo-custom-trigger .logo {
+  height: 32px;
+  background: rgba(255,255,255,.2);
+  margin: 16px;
+}
+#mainvoiw {
+  padding: 24;
+  background : '#fff';
+  min-height: 500 ;
+}
+#headbutom{
+  padding-left: 6px;
+}
+.topICon{
+  height: 64px; 
+  text-align: center;
+  font-size: 18px;
+  color: rgba(0, 0, 0, 0.45);
+  background-color: rgb(245, 245, 245)
+}
+.topICon-mose{
+  height: 64px; 
+  text-align: center;
+  font-size: 18px;
+  background-color: #bae7ff;
+}
+.ant-badge{
+  font-size: 18px;
+}
+.show-my-menu{
+  position: relative;
+  height: 60px;
+  margin-top: 65px;
+}
+.hidden-my-menu{
+  display: none;
+}
+.my-menu-item{
+  height: 36px;
+  width:98%;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  margin-left: 2px;
+  margin-right: 2px;
+  background-color:red;
+  list-style:none;
+}

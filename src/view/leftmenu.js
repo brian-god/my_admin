@@ -25,17 +25,18 @@ class LeftMenu extends Component {
                     inlineCollapsed={this.props.collapsed}
                 >
                     <Menu.Item key="1">
+                        <Link to="/index/home">
                         <Icon type="home" />
-                        <span>Home</span>
+                            <span>Home</span></Link>
                     </Menu.Item>
                     <Menu.Item key="2">
                         <Icon type="mobile" />
                         <span>MyApp</span>
                     </Menu.Item>
                     <SubMenu key="sub2" title={<span><Icon type="team" /><span>用户</span></span>}>
-                        <Menu.Item key="5"><Link to="/user">用户</Link></Menu.Item>
-                        <Menu.Item key="6"><Link to="/user_team">用户组</Link></Menu.Item>
-                        <Menu.Item key="7"><Link to="/adduser">Option 7</Link></Menu.Item>
+                        <Menu.Item key="5"><Link to="/index/user">用户</Link></Menu.Item>
+                        <Menu.Item key="6"><Link to="/index/user_team">用户组</Link></Menu.Item>
+                        <Menu.Item key="7"><Link to="/index/adduser">联系人</Link></Menu.Item>
                         <Menu.Item key="8">Option 8</Menu.Item>
                     </SubMenu>
                     <SubMenu key="sub3" title={<span><Icon type="appstore" /><span>Navigation Two</span></span>}>

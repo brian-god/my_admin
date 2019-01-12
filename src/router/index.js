@@ -12,19 +12,22 @@ import { Switch, Route, Redirect } from 'react-router-dom'
 import UserIndex from './../view/users/index'
 import UserTeam from './../view/users/userteam/userteam'
 import HomePage from './../view/home/index'
-import App      from './../view/users/operation/add'
+import App from './../view/users/operation/add'
+/**
+ * 管理页面漏油
+ */
 class RouterIndex extends Component {
     render() {
         return (
-                <Switch>
-                    <Route path="/" exact render={() => (
-                    <Redirect to="/home" />
-                    )} />
-                    <Route path="/home" component={HomePage} />
-                    <Route path="/user" component={UserIndex} />
-                    <Route path="/user_team" component={UserTeam} />
-                    <Route path="/adduser" component={App} />
-                </Switch>
+            <Switch>
+                <Route path="/index" exact render={() => (
+                    <Redirect to="/index/home" />
+                )} />
+                <Route path="/index/home" component={HomePage} />
+                <Route path="/index/user" component={UserIndex} />
+                <Route path="/index/user_team" component={UserTeam} />
+                <Route path="/index/adduser" component={App} />
+            </Switch>
         )
     }
 }

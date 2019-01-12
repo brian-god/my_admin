@@ -1,20 +1,22 @@
 import React, { Component} from 'react';
-import { Table, Button, Icon, Modal} from 'antd';
+import { Table, Button, Icon, message} from 'antd';
 import columns from './tableColumns'
 import AddUserFrom from './operation/add'
 import fetch from 'isomorphic-fetch';
+import MessageUtils from  './../../utils/messageUtils'
+import axios from 'axios'
+import qs from 'querystring'
 //import axios from 'axios'
 //按钮组
 const ButtonGroup = Button.Group;
-//对话框
-const confirm = Modal.confirm;
 class UserIndex extends Component{
     state = { 
         selectedRowKeys: [],
         visible: false ,
         data: null,
         ischenge : 0,
-        disabled : true
+        disabled : true,
+        isloading: false
     }
     /**
      * 构造函数
@@ -26,6 +28,8 @@ class UserIndex extends Component{
         this.loadingdata();
         //如需使用this则需要先声明一下，能够解决作用域的问题
         this.bachDelete=this.bachDelete.bind(this);
+        //如需使用this则需要先声明一下，能够解决作用域的问题
+        this.onOk = this.onOk.bind(this);
     }
     /**生命周期函数
    * 当state中的数据更新
@@ -33,7 +37,7 @@ class UserIndex extends Component{
    */
     shouldComponentUpdate(nextProps, nextState) {
         //数据改变重新渲染
-        if ( nextState.data !== this.state.data) {
+        if ( nextState.data !== this.state.data||null==this.state.data) {
             return true
         }
         if(this.state.visible!==nextState.visible){
@@ -72,24 +76,48 @@ class UserIndex extends Component{
             });
         }
     }
+    /**
+     * 删除执行的方法
+     */
+    onOk() {
+        //需要删除的数据x-www-form-urlencoded
+        let keys = this.state.selectedRowKeys.join("-");
+        axios.post('http://127.0.0.1:8080/bach_delete', qs.stringify({ "data": keys }), {
+            headers: {
+                'Content-Type': 'application/json; charset=UTF-8'
+            }
+        }).then(res => {
+            if(res.status===200){
+                //let rstjson = JsonUtils.stringToJson(res.data)
+                if(200===res.data["code"]){
+                    message.success(res.data["message"])
+                    //改变删除按钮的状态
+                    this.setState({
+                        disabled: true
+                    })
+                    //删除成功刷新界面
+                    this.loadingdata()
+                }else{
+                    message.error(res.data["message"])
+                }
+            }else{
+                message.error("请求出错");
+            }
+        }, err => {
+            message.error("请求出错");
+        })
+    }
+    onCancel() {
+        message.warning("您取消了删除");
+    }
     //删除的方法
     bachDelete(){
-        console.log("删除方法被点击")
         let seletdata  = this.state.selectedRowKeys
         if (seletdata.length > 0) {
-            confirm({
-            title: 'Are you sure delete this task?',
-            content: 'Some descriptions',
-            okText: 'Yes',
-            okType: 'danger',
-            cancelText: 'No',
-            onOk() {
-            console.log('OK');
-            },
-            onCancel() {
-            console.log('Cancel');
-            },
-        });
+            MessageUtils.ChoiceAlert('Are you sure delete this task?',
+                'Some descriptions',
+                this.onOk,this.onCancel
+            )      
         }
     }
      loadingdata() {
@@ -104,7 +132,7 @@ class UserIndex extends Component{
                     data: json,
                 });
             }).catch(function (e) {
-                console.log("fetch fail", JSON.stringify(e));
+                message.error("数据加载失败");
             });
     }
     render(){
@@ -121,7 +149,8 @@ class UserIndex extends Component{
                                 <Icon type="plus-circle" />新增
                             </Button>
                             <Button type="primary"
-                                onClick={this.loadingdata}>
+                                onClick={this.loadingdata}
+                                disabled={this.state.disabled}>
                                 <Icon type="edit" />
                                 修改
                             </Button>
@@ -133,7 +162,10 @@ class UserIndex extends Component{
                             </Button>
                         </ButtonGroup>
                     </div>
-                    <Table rowKey="id" rowSelection={rowSelection} columns={columns} dataSource={this.state.data}/>
+                    <Table
+                     rowKey="id" rowSelection={rowSelection} columns={columns} 
+                     dataSource={this.state.data}
+                     loading= {this.state.isloading}/>
                 </div>
                 <AddUserFrom
                     visible={this.state.visible}

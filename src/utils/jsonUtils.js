@@ -3,7 +3,7 @@
  */
 
 
-import React, { Component } from 'react'
+import React from 'react'
 /**
  *JsonUitl的实现
  */

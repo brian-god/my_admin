@@ -1,0 +1,40 @@
+.ant-layout-header{
+    background-color: rgba(45,45,45,0)
+}
+.ant-layout-content{
+    height: 100%;
+    background-color: rgba(45,45,45,0)
+}
+.ant-layout-content .mian{
+    height: 500px;
+    background-color: rgba(45,45,45,0)
+}
+/*登陆表单div样式*/
+.ant-col-xs-18 , .ant-col-md-6{
+    height: 500px;
+    margin: 0 auto;
+}
+.logintop{
+    height: 80px;
+}
+.login-form-button{
+    width: 100%;
+}
+.longfrom{
+    padding-top: 65px;
+    height: 420px;
+}
+#root{
+    height: 100%;
+}
+.ant-layout{
+    background-size: 100% auto; 
+    background-repeat: no-repeat; 
+    background-image: url("./../images/login.jpg");
+    height: 100%;
+    width: 100%;
+}
+.ant-layout .ant-layout-footer{
+    background-color: rgba(45,45,45,0)
+}
+html, body{ margin:0; height:100%; }
